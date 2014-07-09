@@ -3,6 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
+var user_wrapper = require('../module/user');
 
 /* GET login page. */
 router.get('/', function(req, res) {
@@ -10,7 +11,14 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-    res.redirect('/config');
+    user_wrapper.get_user(req.body.username,function(reply){
+        if(req.body.password != reply){
+            return res.redirect('/');
+        }
+        else{
+            return res.redirect('/config');
+        }
+    });
 });
 
 module.exports = router;
