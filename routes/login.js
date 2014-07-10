@@ -8,7 +8,7 @@ var user = require('../module/user');
 
 /* GET login page. */
 router.get('/', function(req, res) {
-    res.render('login', { title: '用户登入' });
+    res.render('login', { title: 'login' });
 });
 
 router.post('/', function(req, res) {
@@ -17,6 +17,7 @@ router.post('/', function(req, res) {
             return res.redirect('/');
         }
         else{
+            req.session.user = user;
             return res.redirect('/config');
         }
     });

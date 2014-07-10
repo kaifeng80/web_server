@@ -11,7 +11,13 @@ router.get('/', function(req, res) {
     {
         array.push(i);
     }
-    res.render('config', { title: 'config',content:'content',array:array });
+    res.render('config', {
+        title: 'config',
+        content:'content',
+        array:array,
+        link_show: req.session.user ? "注销":"登录",
+        link: req.session.user ? "/logout":"/login"
+    });
 });
 
 router.post('/', function(req, res) {

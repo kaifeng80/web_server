@@ -6,7 +6,12 @@ var router = express.Router();
 
 /* GET logout page. */
 router.get('/', function(req, res) {
-    res.render('logout', { title: 'logout' });
+    req.session.user = null;
+    res.render('logout', {
+        title: 'logout',
+        link_show: req.session.user ? "注销":"登录",
+        link: req.session.user ? "/logout":"/login"
+    });
 });
 
 module.exports = router;

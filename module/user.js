@@ -14,6 +14,9 @@ user.prototype.init = function(username,password){
     this.password = password;
 };
 
+user.prototype.get_username = function(){
+    return this.username;
+};
 user.prototype.get_password = function(){
   return this.password;
 };

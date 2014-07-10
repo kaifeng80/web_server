@@ -4,6 +4,12 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+
+var redis = require("redis"),
+client = redis.createClient();
+var session_config = require('./config/session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -23,6 +29,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+var options = {
+    "client":client,
+    "host":session_config.host,
+    "port":session_config.port,
+    "ttl":session_config.ttl,
+    "db":session_config.db
+};
+app.use(session({ store: new RedisStore(options), secret: 'keyboard cat' }));
 
 app.use('/', routes);
 app.use('/users', users);
