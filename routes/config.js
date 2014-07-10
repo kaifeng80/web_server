@@ -6,6 +6,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
+    if(!req.session.user){
+        return res.redirect('/login');
+    }
     var array = [];
     for(var i = 0; i < 10; ++i)
     {
