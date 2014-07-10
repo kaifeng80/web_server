@@ -31,10 +31,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 var options = {
     "client":client,
-    "host":session_config.host,
-    "port":session_config.port,
-    "ttl":session_config.ttl,
-    "db":session_config.db
+    "host":session_config.options.host,
+    "port":session_config.options.port,
+    "ttl":session_config.options.ttl,
+    "db":session_config.options.db
 };
 app.use(session({ store: new RedisStore(options), secret: 'keyboard cat' }));
 
