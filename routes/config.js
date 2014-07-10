@@ -14,4 +14,9 @@ router.get('/', function(req, res) {
     res.render('config', { title: 'config',content:'content',array:array });
 });
 
+router.post('/', function(req, res) {
+    var val = req.body.text_value;
+    return res.redirect('/');
+});
+
 module.exports = router;

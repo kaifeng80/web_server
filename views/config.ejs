@@ -63,20 +63,15 @@
 </div>
 
 <tr>
-    <td height="34"><span class="style1" style="font-weight:bold ">version</span></td>
+    <td height="34"><p><span class="style1" style="font-weight:bold ">version</span></p>
+    </td>
 </tr>
-<form name="form_version">
-    <select name="select_version" id="select_version" onFocus="show_version()" onchange="change_version">
-    </select>
-    <select name="select">
-    </select>
 
-    <label>
-        <input type="text" name="textfield">
-    </label>
-    <label>
-        <textarea name="textarea"></textarea>
-    </label>
+<form name="form_version">
+    <select name="select_version" id="select_version" onFocus="show_version()" onChange="change_version">
+    </select>
+    <label></label>
+    <label></label>
 </form>
 
 <tr>
@@ -85,6 +80,18 @@
 <form name="form_channel">
     <select name="select_channel" id="select_channel" onFocus="show_channel()">
     </select>
+</form>
+
+<tr>
+    <td height="34"><p><span class="style1" style="font-weight:bold ">value</span></p>
+    </td>
+</tr>
+
+<form name="form1" method="post" action="">
+    <label>
+        <input name="text_value" id="text_value"  type="text">
+        <input type="submit" name="Submit" value="提交">
+    </label>
 </form>
 
 <div id="container" class="container">

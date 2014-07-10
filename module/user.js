@@ -1,10 +1,19 @@
 /**
- * Created by King Lee on 2014/7/9.
+ * Created by King Lee on 2014/7/10.
  */
-var redis_user_wrapper = require('../nosql/redis_user_wrapper');
 
-var user_arapper = module.exports;
+var user = function() {
+    this.username = null;
+    this.password = null;
+};
 
-user_arapper.get_user = function( name,cb) {
-    redis_user_wrapper.get_user(name,cb);
+module.exports = user;
+
+user.prototype.init = function(username,password){
+    this.username = username;
+    this.password = password;
+};
+
+user.prototype.get_password = function(){
+  return this.password;
 };
