@@ -13,30 +13,17 @@
 </head>
 
 <script type="text/javascript">
-    function show_version() {
-        var array = "<%= array %>";
-        var array2 = [];
-        for (var i = 0; i < array.length; i++) {
-            if (!(i % 2)) {
-                array2.push(array[i]);
-            }
-        }
-        for (i = 0; i < array2.length; i++) {
-            document.form_version.select_version.options[i] = new Option(array2[i], i);
+    function show_channel() {
+        var array_string = "<%= array %>";
+        var array = array_string.split(',');
+        document.form_channel.select_channel.length = 0;
+        for(var i = 0; i < array.length; ++i){
+            document.form_channel.select_channel.options[i] = new Option(array[i],array[i]);
         }
     }
 
-    function show_channel() {
-        var array = "<%= array %>";
-        var array2 = [];
-        for (var i = 0; i < array.length; i++) {
-            if (!(i % 2)) {
-                array2.push(array[i]);
-            }
-        }
-        for (i = 0; i < array2.length; i++) {
-            document.form_channel.select_channel.options[i] = new Option(array2[i], i);
-        }
+    function change_channel() {
+        //  do something
     }
 </script>
 <body>
@@ -62,23 +49,16 @@
 </div>
 
 <tr>
-    <td height="34"><p><span class="style1" style="font-weight:bold ">version</span></p>
-    </td>
-</tr>
-
-<form name="form_version">
-    <select name="select_version" id="select_version" onFocus="show_version()" onChange="change_version">
-    </select>
-    <label></label>
-    <label></label>
-</form>
-
-<tr>
     <td height="34"><span class="style1" style="font-weight:bold ">channel</span></td>
 </tr>
-<form name="form_channel">
-    <select name="select_channel" id="select_channel" onFocus="show_channel()">
+<form name="form_channel" method="post" action="">
+    <select name="select_channel" id="select_channel"  onFocus="show_channel()" onchange="change_channel()">
+        <option value="template:template" selected>template:template</option>
+        <input type="submit" name="Submit" value="确定">
     </select>
+    <label>
+        <textarea name="textarea"><%= activity %></textarea>
+    </label>
 </form>
 
 <tr>
