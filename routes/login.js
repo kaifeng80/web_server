@@ -18,7 +18,7 @@ router.post('/', function(req, res) {
         }
         else{
             req.session.user = user;
-            return res.redirect('/config');
+            return res.redirect('/config2');
         }
     });
 });

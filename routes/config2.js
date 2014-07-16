@@ -15,7 +15,9 @@ router.get('/', function(req, res) {
         var array = [];
         //var data = "[{ id: 5, text: '5%' }, { id: 10, text: '10%'}, { id: 20, text: '20%'}, { id: 30, text: '30%'}]";
         var data = [];
-        var default_channel = "template:template";
+        var versions = [];
+        var channels = [];
+        var default_channel = "template:0.0.0";
         var default_activity = {};
         var index = 1;
         for(var v in all_channel){
@@ -24,12 +26,18 @@ router.get('/', function(req, res) {
             }
             array.push(v);
             data.push({id:index,text:v});
+            var version_chanel = v;
+            var array_version_chanel = version_chanel.split(':');
+            versions.push({id:index,text:array_version_chanel[1]});
+            channels.push({id:index,text:array_version_chanel[0]});
             ++index;
         }
         res.render('config2', {
             title: 'config',
             channel:default_channel,
             activity:default_activity,
+            versions:JSON.stringify(versions),
+            channels:JSON.stringify(channels),
             array:array,
             data : JSON.stringify(data),
             link_show: req.session.user ? "注销":"登录",

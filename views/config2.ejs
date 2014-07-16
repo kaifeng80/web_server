@@ -12,7 +12,6 @@
     <link href="stylesheets/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -33,194 +32,26 @@
     </div>
 </div>
 
-<h4>选择渠道</h4>
-<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="id" emptyText="请选择..."
-       data ="<%= data %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."/
+<h4>选择版本</h4>
+<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="id" emptyText="1.0.0"
+       data ="<%= versions %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
        valuechanged="onValueChanged" >
+<a class="mini-button " plain="true" iconCls="icon-add" onclick="onVersionClick">增加</a>
+<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onVersionClick">删除</a>
 
-<h1>类型1</h1>
-<div id="form1">
-    <table>
-        <tr>
-            <td><label for="username$text">类型：</label></td>
-            <td>
-                <input name="type" value="1234" class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开关：</label></td>
-            <td>
-                <input name="switch"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开始时间：</label></td>
-            <td>
-                <input name="startTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">结束时间：</label></td>
-            <td>
-                <input name="endTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">签到天数：</label></td>
-            <td>
-                <input name="signDays"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">奖励金币：</label></td>
-            <td>
-                <input name="awardCoin"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">描述：</label></td>
-            <td>
-                <input name="desc"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input value="Login" type="button" onclick="submitForm()" />
-            </td>
-        </tr>
-    </table>
-</div>
+<h4>选择渠道</h4>
+<input id="combo2" class="mini-combobox" style="width:150px;" textField="text" valueField="id" emptyText="template"
+       data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
+       valuechanged="onValueChanged" >
+<a class="mini-button " plain="true" iconCls="icon-add" onclick="onChannelClick">增加</a>
+<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onChannelClick">删除</a>
+<br /><br />
 
-<h1>类型2</h1>
-<div id="form1">
-    <table>
-        <tr>
-            <td><label for="username$text">类型：</label></td>
-            <td>
-                <input name="type" value="1234" class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开关：</label></td>
-            <td>
-                <input name="switch"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开始时间：</label></td>
-            <td>
-                <input name="startTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">结束时间：</label></td>
-            <td>
-                <input name="endTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">签到天数：</label></td>
-            <td>
-                <input name="signDays"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">奖励金币：</label></td>
-            <td>
-                <input name="awardCoin"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">描述：</label></td>
-            <td>
-                <input name="desc"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input value="Login" type="button" onclick="submitForm()" />
-            </td>
-        </tr>
-    </table>
-</div>
+<textarea class="mini-textarea" class="auto_textarea"  style="width:800px;height:300px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+<br /><br />
 
-<h1>类型3</h1>
-<div id="form1">
-    <table>
-        <tr>
-            <td><label for="username$text">类型：</label></td>
-            <td>
-                <input name="type" value="1234" class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开关：</label></td>
-            <td>
-                <input name="switch"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">开始时间：</label></td>
-            <td>
-                <input name="startTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">结束时间：</label></td>
-            <td>
-                <input name="endTime"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">签到天数：</label></td>
-            <td>
-                <input name="signDays"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">奖励金币：</label></td>
-            <td>
-                <input name="awardCoin"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="username$text">描述：</label></td>
-            <td>
-                <input name="desc"  class="mini-textbox"/>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input value="Login" type="button" onclick="submitForm()" />
-            </td>
-        </tr>
-    </table>
-</div>
-
-
-<script type="text/javascript">
-    mini.parse();
-
-    function submitForm() {
-
-        var form = new mini.Form("#form1");
-
-        form.validate();
-        if (form.isValid() == false) return;
-
-        //提交数据
-        var data = form.getData();
-        var json = mini.encode(data);
-        alert("提交成功");
-    }
-
-    function onValueChanged(){
-        alert("123");
-    }
-</script>
+<textarea class="mini-textarea" class="auto_textarea"  style="width:800px;height:300px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+<br /><br />
 
 <div id="container" class="container">
     <hr/>
@@ -228,8 +59,52 @@
         <p><a href="http://blog.chinaunix.net/uid/8625039.html" target="_blank">King Lee</a> 2014</p>
     </footer>
 </div>
-
 </body>
+
+<script type="text/javascript">
+    mini.parse();
+    function onVersionClick(e) {
+        $.ajax({
+            url : "/save",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                target:"target"
+            },
+            success : function(json) {
+                if(json){
+                    alert("ok");
+                }else{
+                    alert("error");
+                }
+            }
+        });
+    }
+
+    function onChannelClick(e) {
+        var button = e.sender;
+        var iconCls = button.getIconCls();
+        var text = button.getText();
+        if (iconCls) {
+            alert("text2: " + text + "\nicon: " + iconCls);
+        } else {
+            alert(text);
+        }
+    }
+
+    function onValueChanged(e) {
+        var button = e.sender;
+        var iconCls = button.getIconCls();
+        var text = button.getText();
+        if (iconCls) {
+            alert("text: " + text + "\nicon: " + iconCls);
+        } else {
+            alert(text);
+        }
+    }
+</script>
+
 <script src="/javascripts/jquery.js"></script>
 <script src="/miniui/miniui.js" type="text/javascript"></script>
 </html>

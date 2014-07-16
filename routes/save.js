@@ -1,7 +1,6 @@
 /**
- * Created by King Lee on 14-7-15.
+ * Created by King Lee on 14-7-16.
  */
-
 var express = require('express');
 var router = express.Router();
 
@@ -11,6 +10,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-    return res.redirect('/');
+    var result = {code :200}
+    res.end(JSON.stringify(result) + '\n', 'utf8');
 });
 module.exports = router;

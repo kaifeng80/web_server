@@ -17,6 +17,7 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 var config = require('./routes/config');
 var config2 = require('./routes/config2');
+var save = require('./routes/save');
 var app = express();
 
 // view engine setup
@@ -44,6 +45,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/config', config);
 app.use('/config2', config2);
+app.use('/save', save);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
