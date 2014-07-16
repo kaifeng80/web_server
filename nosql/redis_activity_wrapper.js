@@ -17,6 +17,18 @@ redis_activity_wrapper.add_activity = function(channel,varsion,activity){
     });
 };
 
+redis_activity_wrapper.save_activity = function(channel_varsion,activity,cb){
+    redis_pools.execute('pool_1',function(client, release){
+        client.hset(h_activity,channel_varsion,activity,function (err, reply){
+            if(err){
+                //  some thing log
+            }
+            cb(reply);
+            release();
+        });
+    });
+};
+
 redis_activity_wrapper.get_activity = function(channel,version,cb){
     redis_pools.execute('pool_1',function(client, release){
         client.hget(h_activity,channel + ':' + version,function (err, reply){

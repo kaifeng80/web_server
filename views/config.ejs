@@ -52,24 +52,13 @@
     <td height="34"><span class="style1" style="font-weight:bold ">channel</span></td>
 </tr>
 <form name="form_channel" method="post" action="">
-    <select name="select_channel" id="select_channel"  onFocus="show_channel()" onchange="change_channel()">
-        <option value="template:template" selected>template:template</option>
-        <input type="submit" name="Submit" value="确定">
+    <select name="select_channel" id="select_channel" size="1" onFocus="show_channel()" onchange="change_channel()">
+        <option selected><%= channel %></option>
+        <input type="submit" name="choose" value="选择">
     </select>
     <label>
-        <textarea name="textarea"><%= activity %></textarea>
-    </label>
-</form>
-
-<tr>
-    <td height="34"><p><span class="style1" style="font-weight:bold ">value</span></p>
-    </td>
-</tr>
-
-<form name="form1" method="post" action="">
-    <label>
-        <input name="text_value" id="text_value"  type="text">
-        <input type="submit" name="Submit" value="提交">
+        <textarea name="config_info" cols="200" rows="10"><%= activity %></textarea>
+        <input type="submit" name="save" value="保存">
     </label>
 </form>
 

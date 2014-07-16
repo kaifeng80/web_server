@@ -19,6 +19,12 @@ activity_wrapper.get = function(channel,version,cb){
     });
 };
 
+activity_wrapper.save = function(channel_version,activity,cb){
+    redis_activity_wrapper.save_activity(channel_version,activity,function(reply){
+        cb(reply);
+    });
+};
+
 activity_wrapper.get_all = function(cb){
     redis_activity_wrapper.get_all_activity(function(reply){
         if(reply){

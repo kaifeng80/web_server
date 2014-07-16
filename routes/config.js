@@ -13,13 +13,18 @@ router.get('/', function(req, res) {
     activity_wrapper.get_all(function(reply){
         var all_channel = reply;
         var array = [];
+        var default_channel = "template:template";
+        var default_activity = {};
         for(var v in all_channel){
+            if(default_channel == v){
+                default_activity = all_channel[v];
+            }
             array.push(v);
         }
         res.render('config', {
             title: 'config',
-            channel:"",
-            activity:"",
+            channel:default_channel,
+            activity:default_activity,
             content:'content',
             array:array,
             link_show: req.session.user ? "注销":"登录",
@@ -30,8 +35,26 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
     var val = req.body.text_value;
-    var select_channel_index = req.body.select_channel;
-    if(select_channel_index){
+    var select_channel = req.body.select_channel;
+    var config_info = req.body.config_info;
+    var save = req.body.save;
+    if(save){
+        if(config_info){
+            try {
+                JSON.parse(config_info);
+            } catch (err) {
+                return res.send("save failed");
+            }
+            activity_wrapper.save(select_channel,config_info,function(reply){
+                if(0 == reply){
+                    return res.send("save succeed");
+                }
+                return res.send("save failed");
+            });
+
+        }
+    }
+    else  if(select_channel){
         activity_wrapper.get_all(function(reply){
             var all_channel = reply;
             var array = [];
@@ -39,7 +62,7 @@ router.post('/', function(req, res) {
                 array.push(v);
             }
             for(var v in all_channel){
-                if(v == select_channel_index){
+                if(v == select_channel){
                     return res.render('config',{
                         title: 'config',
                         channel:v,
