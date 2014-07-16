@@ -16,7 +16,7 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var config = require('./routes/config');
-
+var config2 = require('./routes/config2');
 var app = express();
 
 // view engine setup
@@ -43,6 +43,7 @@ app.use('/users', users);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/config', config);
+app.use('/config2', config2);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
