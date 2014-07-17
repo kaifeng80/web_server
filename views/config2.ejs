@@ -45,6 +45,7 @@
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
+<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCheck">验证</a>
 <br /><br />
 <a
     <textarea id="text_area_config" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
@@ -171,7 +172,6 @@
     }
 
     function onSave(e) {
-
         var comno1 = mini.get("combo1");
         var comno2 = mini.get("combo2");
         var version = comno1.getText();
@@ -209,6 +209,23 @@
                 }
             }
         });
+    }
+
+    function onCheck(){
+        var text_area_config = mini.get("text_area_config");
+        var text_area_config_json = mini.get("text_area_config_json");
+        var text_area_log = mini.get("text_area_log");
+
+        var activity = text_area_config.getValue();
+        try {
+            jsonToStr(JSON.parse(activity), null, '\t');
+        } catch (err) {
+            text_area_log.setValue("format error,please check it again!");
+            return;
+        }
+        var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
+        text_area_config_json.setValue(text_area_config_show_json);
+        text_area_log.setValue("format ok");
     }
 </script>
 
