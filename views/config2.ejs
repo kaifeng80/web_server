@@ -39,20 +39,23 @@
 <h4>选择渠道</h4>
 <input id="combo2" class="mini-combobox" style="width:150px;" textField="text"  emptyText="template"
        data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
-       valuechanged="onValueChanged"
-       onvalidation="onComboValidation"
-        />
+       onvalidation="onComboValidation"/>
+
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onShow">显示</a>
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
 <br /><br />
-
-<textarea id="text_area_config" class="mini-textarea"  style="width:800px;height:300px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
-<br /><br />
-
-<textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:800px;height:300px;"  value="ok"  emptyText="{config}"></textarea>
-<br /><br />
+<a
+    <textarea id="text_area_config" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+    <br /><br />
+</a>
+<a
+    <textarea id="text_area_config_json" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+    <br /><br />
+</a>
+    <textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:100px;"  value="ok"  emptyText="{config}"></textarea>
+    <br /><br />
 
 <div id="container" class="container">
     <hr/>
@@ -63,7 +66,7 @@
 </body>
 
 <script type="text/javascript">
-    mini.parse();
+    //mini.parse();
     function onVersionClick(e) {
         $.ajax({
             url : "/save",
@@ -116,9 +119,7 @@
     }
 
     function onComboValidation(e) {
-        var comno2 = mini.get("combo2");
-        var value1 = comno1.getValue();
-        var value2 = comno2.getText();
+
     }
     function onShow(){
         var comno1 = mini.get("combo1");
@@ -138,16 +139,18 @@
             success : function(result) {
                 if(result){
                     var text_area_config = mini.get("text_area_config");
+                    var text_area_config_json = mini.get("text_area_config_json");
                     var text_area_log = mini.get("text_area_log");
                     switch (result.code)
                     {
                         case 200:
-                            if(1){
+                            if(0){
                                 text_area_config.setValue(result.activity);
                             }
                             else{
-                                var text_area_config_show_json = jsonToStr(result.activity, null, '\t');
-                                text_area_config.setValue(text_area_config_show_json);
+                                var text_area_config_show_json = jsonToStr(JSON.parse(result.activity), null, '\t');
+                                text_area_config_json.setValue(text_area_config_show_json);
+                                text_area_config.setValue(result.activity);
                             }
                             text_area_log.setValue("ok");
                             break;
