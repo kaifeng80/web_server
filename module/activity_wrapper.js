@@ -10,12 +10,18 @@ activity_wrapper.get = function(channel,version,cb){
         if(reply){
             cb(JSON.parse(reply));
         }else{
-            redis_activity_wrapper.get_activity('template','template',function(reply){
+            redis_activity_wrapper.get_activity('template','0.0.0',function(reply){
                 if(reply) {
                     cb(JSON.parse(reply));
                 }
             });
         }
+    });
+};
+
+activity_wrapper.get_just = function(channel,version,cb){
+    redis_activity_wrapper.get_activity(channel,version,function(reply){
+         cb(reply);
     });
 };
 

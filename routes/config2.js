@@ -54,19 +54,14 @@ router.post('/', function(req, res) {
         return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
     }
     if("show" == type){
-        activity_wrapper.get_all(function(reply){
-            var all_channel = reply;
-            var default_channel = channel + ":" + version;
-            var default_activity = {};
-            for(var v in all_channel){
-                if(default_channel == v){
-                    default_activity = all_channel[v];
-                }
-            }
+        activity_wrapper.get_just(channel,version,function(reply){
             var result = {
                 code :200,
-                activity:default_activity
+                activity:reply
             };
+            if(!reply){
+                result.code = 202;
+            }
             res.end(JSON.stringify(result) + '\n', 'utf8');
         });
     }
