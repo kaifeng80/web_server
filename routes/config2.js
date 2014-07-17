@@ -47,54 +47,48 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-    var val = req.body.text_value;
-    var select_channel = req.body.select_channel;
-    var config_info = req.body.config_info;
-    var save = req.body.save;
-    var data = [];
-    var index = 1;
-    if(save){
-        if(config_info){
-            try {
-                JSON.parse(config_info);
-            } catch (err) {
-                return res.send("save failed");
-            }
-            activity_wrapper.save(select_channel,config_info,function(reply){
-                if(0 == reply){
-                    return res.send("save succeed");
-                }
-                return res.send("save failed");
-            });
-
-        }
+    var type = req.body.type;
+    var version = req.body.version;
+    var channel = req.body.channel;
+    if(!version || !channel){
+        return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
     }
-    else  if(select_channel){
+    if("show" == type){
         activity_wrapper.get_all(function(reply){
             var all_channel = reply;
-            var array = [];
+            var default_channel = channel + ":" + version;
+            var default_activity = {};
             for(var v in all_channel){
-                array.push(v);
-                data.push({id:index,text:v});
-                ++index;
-            }
-            for(var v in all_channel){
-                if(v == select_channel){
-                    return res.render('config2',{
-                        title: 'config',
-                        channel:v,
-                        activity:all_channel[v],
-                        array:array,
-                        data : data,
-                        link_show: req.session.user ? "注销":"登录",
-                        link: req.session.user ? "/logout":"/login"
-                    });
+                if(default_channel == v){
+                    default_activity = all_channel[v];
                 }
             }
+            var result = {
+                code :200,
+                activity:default_activity
+            };
+            res.end(JSON.stringify(result) + '\n', 'utf8');
         });
     }
-    else{
-        return res.redirect('/');
+    else if("save" == type){
+        var result = {
+            code :200
+        };
+        var config = req.body.config;
+        if(config){
+            try {
+                JSON.parse(config);
+            } catch (err) {
+                result.code = 201;
+                return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            }
+            activity_wrapper.save(channel + ":" + version,config,function(reply){
+                if(0 != reply){
+                    result.code = 202;
+                }
+                return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            });
+        }
     }
 });
 
