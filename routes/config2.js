@@ -29,7 +29,15 @@ router.get('/', function(req, res) {
             var version_chanel = v;
             var array_version_chanel = version_chanel.split(':');
             versions.push({id:index,text:array_version_chanel[1]});
-            channels.push({id:index,text:array_version_chanel[0]});
+            var  find = false;
+            for(var i = 0; i < channels.length; ++i){
+                if(channels[i].text == array_version_chanel[0]){
+                    find = true;
+                }
+            }
+            if(!find){
+                channels.push({id:index,text:array_version_chanel[0]});
+            }
             ++index;
         }
         res.render('config2', {

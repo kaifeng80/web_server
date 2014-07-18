@@ -130,6 +130,8 @@
         var text_area_log = mini.get("text_area_log");
         if("" == version || "" == channel){
             text_area_log.setValue("param error, please choose version and channel again");
+            text_area_config.setValue("");
+            text_area_config_json.setValue("");
             return;
         }
         $.ajax({
@@ -175,10 +177,8 @@
     }
 
     function onSave(e) {
-        var comno1 = mini.get("combo1");
-        var comno2 = mini.get("combo2");
-        var version = comno1.getText();
-        var channel = comno2.getText();
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
         var text_area_config = mini.get("text_area_config");
         var text_area_log = mini.get("text_area_log");
         var config = text_area_config.getValue();
@@ -224,6 +224,8 @@
             jsonToStr(JSON.parse(activity), null, '\t');
         } catch (err) {
             text_area_log.setValue("format error,please check it again!");
+            text_area_config.setValue("");
+            text_area_config_json.setValue("");
             return;
         }
         var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
