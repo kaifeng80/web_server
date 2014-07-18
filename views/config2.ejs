@@ -67,7 +67,6 @@
 </body>
 
 <script type="text/javascript">
-    //mini.parse();
     function onVersionClick(e) {
         $.ajax({
             url : "/save",
@@ -88,31 +87,71 @@
     }
 
     function onAdd(e) {
-        var obj = mini.get("combo1");
-        obj.setValue("usa");
-
-        var button = e.sender;
-        var iconCls = button.getIconCls();
-        var text = button.getText();
-        if (iconCls) {
-            alert("text2: " + text + "\nicon: " + iconCls);
-        } else {
-            alert(text);
-        }
+        var new_version = mini.get("combo1").getText();
+        var new_channel = mini.get("combo2").getText();
+        $.ajax({
+            url : "/config2",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"add",
+                version:new_version,
+                channel:new_channel
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            mini.get("text_area_log").setValue("add config ok");
+                            break;
+                        case 202:
+                            mini.get("text_area_log").setValue("add config error");
+                            break;
+                    }
+                }else{
+                    text_area_log.setValue("add config error");
+                }
+            }
+        });
     }
 
     function onDel(e) {
-        var obj = mini.get("combo1");
-        obj.setValue("usa");
-
-        var button = e.sender;
-        var iconCls = button.getIconCls();
-        var text = button.getText();
-        if (iconCls) {
-            alert("text2: " + text + "\nicon: " + iconCls);
-        } else {
-            alert(text);
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
+        if(version == "0.0.0" && channel == "template"){
+            mini.get("text_area_log").setValue("error,default template cann't be delete");
+            return;
         }
+        $.ajax({
+            url : "/config2",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"del",
+                version:version,
+                channel:channel
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            mini.get("text_area_log").setValue("del config ok");
+                            mini.get("text_area_config").setValue("");
+                            mini.get("text_area_config_json").setValue("");
+                            break;
+                        case 202:
+                            mini.get("text_area_log").setValue("del config error");
+                            break;
+                    }
+                }else{
+                    text_area_log.setValue("del config error");
+                }
+            }
+        });
     }
 
     function onValueChanged(e) {
@@ -146,7 +185,6 @@
             },
             success : function(result) {
                 if(result){
-
                     switch (result.code)
                     {
                         case 200:
@@ -166,11 +204,10 @@
                         case 202:
                             var log = "error code:202,can not find " + version + ":" + channel;
                             text_area_log.setValue(log);
-                            text_area_config.setValue("error");
                             break;
                     }
                 }else{
-                    alert("error");
+                    text_area_log.setValue("save error");
                 }
             }
         });
@@ -224,7 +261,6 @@
             jsonToStr(JSON.parse(activity), null, '\t');
         } catch (err) {
             text_area_log.setValue("format error,please check it again!");
-            text_area_config.setValue("");
             text_area_config_json.setValue("");
             return;
         }

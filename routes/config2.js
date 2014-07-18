@@ -61,22 +61,35 @@ router.post('/', function(req, res) {
     if(!version || !channel){
         return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
     }
+    var result = {
+        code :200
+    };
     if("show" == type){
         activity_wrapper.get_just(channel,version,function(reply){
-            var result = {
-                code :200,
-                activity:reply
-            };
+            result.activity = reply;
             if(!reply){
                 result.code = 202;
             }
             res.end(JSON.stringify(result) + '\n', 'utf8');
         });
     }
+    else if("add" == type){
+        activity_wrapper.add(channel,version,function(reply){
+            if(1 != reply){
+                result.code = 202;
+            }
+            return  res.end(JSON.stringify(result) + '\n', 'utf8');
+        });
+    }
+    else if("del" == type){
+        activity_wrapper.del(channel,version,function(reply){
+            if(1 != reply){
+                result.code = 202;
+            }
+            return  res.end(JSON.stringify(result) + '\n', 'utf8');
+        });
+    }
     else if("save" == type){
-        var result = {
-            code :200
-        };
         var config = req.body.config;
         if(config){
             try {

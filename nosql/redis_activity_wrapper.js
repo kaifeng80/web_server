@@ -6,12 +6,25 @@ var h_activity = 'h_activity';
 
 var redis_activity_wrapper = module.exports;
 
-redis_activity_wrapper.add_activity = function(channel,varsion,activity){
+redis_activity_wrapper.add_activity = function(channel,varsion,activity,cb){
     redis_pools.execute('pool_1',function(client, release){
         client.hset(h_activity,channel + ':' + varsion,JSON.stringify(activity),function (err, reply){
             if(err){
                 //  some thing log
             }
+            cb(reply);
+            release();
+        });
+    });
+};
+
+redis_activity_wrapper.del_activity = function(channel,varsion,cb){
+    redis_pools.execute('pool_1',function(client, release){
+        client.hdel(h_activity,channel + ':' + varsion,function (err, reply){
+            if(err){
+                //  some thing log
+            }
+            cb(reply);
             release();
         });
     });

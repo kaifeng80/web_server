@@ -31,6 +31,20 @@ activity_wrapper.save = function(channel_version,activity,cb){
     });
 };
 
+activity_wrapper.add = function(channel,version,cb){
+    redis_activity_wrapper.get_activity("template","0.0.0",function(activity){
+        redis_activity_wrapper.add_activity(channel,version,JSON.parse(activity),function(reply){
+            cb(reply);
+        });
+    });
+};
+
+activity_wrapper.del = function(channel,version,cb){
+    redis_activity_wrapper.del_activity(channel,version,function(reply){
+        cb(reply);
+    });
+};
+
 activity_wrapper.get_all = function(cb){
     redis_activity_wrapper.get_all_activity(function(reply){
         if(reply){
