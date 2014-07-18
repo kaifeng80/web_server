@@ -45,7 +45,9 @@
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
+<!--
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCheck">验证</a>
+-->
 <br /><br />
 <a
     <textarea id="text_area_config" class="mini-textarea"  style="width:1200px;height:400px;"  value="please choose version and channel"  emptyText="{config}"></textarea>
@@ -255,6 +257,8 @@
                     {
                         case 200:
                             log_message = log_message + "save ok";
+                            var text_area_config_show_json = jsonToStr(JSON.parse(text_area_config.getValue()), null, '\t');
+                            text_area_config_json.setValue(text_area_config_show_json);
                             break;
                         case 201:
                             log_message = log_message + "save error,please check the config format";
