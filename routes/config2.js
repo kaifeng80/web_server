@@ -28,14 +28,22 @@ router.get('/', function(req, res) {
             data.push({id:index,text:v});
             var version_chanel = v;
             var array_version_chanel = version_chanel.split(':');
-            versions.push({id:index,text:array_version_chanel[1]});
-            var  find = false;
-            for(var i = 0; i < channels.length; ++i){
-                if(channels[i].text == array_version_chanel[0]){
-                    find = true;
+            var  find_version = false;
+            var  find_channel = false;
+            for(var i = 0; i < versions.length; ++i){
+                if(versions[i].text == array_version_chanel[1]){
+                    find_version = true;
                 }
             }
-            if(!find){
+            for(var j = 0; j < channels.length; ++j){
+                if(channels[j].text == array_version_chanel[0]){
+                    find_channel = true;
+                }
+            }
+            if(!find_version){
+                versions.push({id:index,text:array_version_chanel[1]});
+            }
+            if(!find_channel){
                 channels.push({id:index,text:array_version_chanel[0]});
             }
             ++index;

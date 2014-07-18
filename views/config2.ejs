@@ -89,6 +89,12 @@
     function onAdd(e) {
         var new_version = mini.get("combo1").getText();
         var new_channel = mini.get("combo2").getText();
+        var log_message = new_version + ":" + new_channel + " ";
+        if("" == new_version || "" == new_channel){
+            log_message = log_message + "param error, please choose version and channel again";
+            mini.get("text_area_log").setValue(log_message);
+            return;
+        }
         $.ajax({
             url : "/config2",
             dataType: 'json',
@@ -104,15 +110,16 @@
                     switch (result.code)
                     {
                         case 200:
-                            mini.get("text_area_log").setValue("add config ok");
+                            log_message = log_message + "add config ok"
                             break;
                         case 202:
-                            mini.get("text_area_log").setValue("add config error");
+                            log_message = log_message + "add config error"
                             break;
                     }
                 }else{
-                    text_area_log.setValue("add config error");
+                    log_message = log_message + "add config error"
                 }
+                mini.get("text_area_log").setValue(log_message);
             }
         });
     }
@@ -120,8 +127,10 @@
     function onDel(e) {
         var version = mini.get("combo1").getText();
         var channel = mini.get("combo2").getText();
-        if(version == "0.0.0" && channel == "template"){
-            mini.get("text_area_log").setValue("error,default template cann't be delete");
+        var log_message = version + ":" + channel + " ";
+        if(channel == "template"){
+            log_message = log_message + "error,default template cann't be delete";
+            mini.get("text_area_log").setValue(log_message);
             return;
         }
         $.ajax({
@@ -139,17 +148,20 @@
                     switch (result.code)
                     {
                         case 200:
-                            mini.get("text_area_log").setValue("del config ok");
+                            log_message = log_message + "del config ok";
+                            mini.get("text_area_log").setValue(log_message);
                             mini.get("text_area_config").setValue("");
                             mini.get("text_area_config_json").setValue("");
                             break;
                         case 202:
-                            mini.get("text_area_log").setValue("del config error");
+                            log_message = log_message + "del config error";
+
                             break;
                     }
                 }else{
-                    text_area_log.setValue("del config error");
+                        log_message = log_message + "del config error";
                 }
+                mini.get("text_area_log").setValue(log_message);
             }
         });
     }
@@ -164,11 +176,13 @@
     function onShow(){
         var version = mini.get("combo1").getText();
         var channel = mini.get("combo2").getText();
+        var log_message = version + ":" + channel + " ";
+        var text_area_log = mini.get("text_area_log");
         var text_area_config = mini.get("text_area_config");
         var text_area_config_json = mini.get("text_area_config_json");
-        var text_area_log = mini.get("text_area_log");
         if("" == version || "" == channel){
-            text_area_log.setValue("param error, please choose version and channel again");
+            log_message = log_message + "param error, please choose version and channel again";
+            text_area_log.setValue(log_message);
             text_area_config.setValue("");
             text_area_config_json.setValue("");
             return;
@@ -196,19 +210,22 @@
                                 text_area_config_json.setValue(text_area_config_show_json);
                                 text_area_config.setValue(result.activity);
                             }
-                            text_area_log.setValue("get config ok");
+                            log_message = log_message + "get config ok";
                             break;
                         case 201:
-                            text_area_log.setValue("error code:201,param error");
+                            log_message = log_message + "error code:201,param error";
                             break;
                         case 202:
-                            var log = "error code:202,can not find " + version + ":" + channel;
-                            text_area_log.setValue(log);
+                            log_message = log_message + "error code:202,can not find";
+                            text_area_config_json.setValue("");
+                            text_area_config.setValue("");
                             break;
                     }
                 }else{
-                    text_area_log.setValue("save error");
+                    log_message = log_message + "show error";
+                    text_area_config_json.setValue("");
                 }
+                text_area_log.setValue(log_message);
             }
         });
     }
@@ -216,7 +233,9 @@
     function onSave(e) {
         var version = mini.get("combo1").getText();
         var channel = mini.get("combo2").getText();
+        var log_message = version + ":" + channel + " ";
         var text_area_config = mini.get("text_area_config");
+        var text_area_config_json = mini.get("text_area_config_json");
         var text_area_log = mini.get("text_area_log");
         var config = text_area_config.getValue();
         $.ajax({
@@ -235,23 +254,28 @@
                     switch (result.code)
                     {
                         case 200:
-                            text_area_log.setValue("save ok");
+                            log_message = log_message + "save ok";
                             break;
                         case 201:
-                            text_area_log.setValue("format error");
+                            log_message = log_message + "save error,please check the config format";
+                            text_area_config_json.setValue("");
                             break;
                         case 202:
-                            text_area_log.setValue("redis error");
+                            log_message = log_message + "redis error";
                             break;
                     }
                 }else{
-                    alert("error");
+                    log_message = log_message + "save error";
                 }
+                text_area_log.setValue(log_message);
             }
         });
     }
 
     function onCheck(){
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
+        var log_message = version + ":" + channel + " ";
         var text_area_config = mini.get("text_area_config");
         var text_area_config_json = mini.get("text_area_config_json");
         var text_area_log = mini.get("text_area_log");
@@ -260,13 +284,15 @@
         try {
             jsonToStr(JSON.parse(activity), null, '\t');
         } catch (err) {
-            text_area_log.setValue("format error,please check it again!");
+            log_message = log_message + "format error,please check it again!";
+            text_area_log.setValue(log_message);
             text_area_config_json.setValue("");
             return;
         }
         var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
         text_area_config_json.setValue(text_area_config_show_json);
-        text_area_log.setValue("format ok");
+        log_message = log_message + "format ok";
+        text_area_log.setValue(log_message);
     }
 </script>
 
