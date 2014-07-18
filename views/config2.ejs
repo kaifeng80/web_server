@@ -33,30 +33,26 @@
 </div>
 
 <h4>选择版本</h4>
-<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="id" emptyText="1.0.0"
+<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="id"
        data ="<%= versions %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."/>
 
 <h4>选择渠道</h4>
-<input id="combo2" class="mini-combobox" style="width:150px;" textField="text"  emptyText="template"
+<input id="combo2" class="mini-combobox" style="width:150px;" textField="text"
        data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
+       onvaluechanged="onValueChanged"
        onvalidation="onComboValidation"/>
 
-<a class="mini-button " plain="true" iconCls="icon-add" onclick="onShow">显示</a>
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCheck">验证</a>
-<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onTime">时间</a>
-<a class="mini-textarea" style="width:100px;height:21px;" id="text_area_time_now"></a>
-<a class="mini-spinner" id="spinner_time_interval" style="width:100px;height:21px;" minValue="1" maxValue="100" onvaluechanged="onSpinnerValueChanged"></a>
-<a class="mini-textarea" style="width:100px;height:21px;" id="text_area_time_after"></a>
 <br /><br />
 <a
-    <textarea id="text_area_config" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+    <textarea id="text_area_config" class="mini-textarea"  style="width:1200px;height:400px;"  value="please choose version and channel"  emptyText="{config}"></textarea>
     <br /><br />
 </a>
 <a
-    <textarea id="text_area_config_json" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
+    <textarea id="text_area_config_json" class="mini-textarea"  style="width:400px;height:400px;"  value=""  emptyText="{config}"></textarea>
     <br /><br />
 </a>
     <textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:100px;"  value="ok"  emptyText="{config}"></textarea>
@@ -120,17 +116,22 @@
     }
 
     function onValueChanged(e) {
-        alert("value changed,not called, why?");
+        onShow();
     }
 
     function onComboValidation(e) {
 
     }
     function onShow(){
-        var comno1 = mini.get("combo1");
-        var comno2 = mini.get("combo2");
-        var version = comno1.getText();
-        var channel = comno2.getText();
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
+        var text_area_config = mini.get("text_area_config");
+        var text_area_config_json = mini.get("text_area_config_json");
+        var text_area_log = mini.get("text_area_log");
+        if("" == version || "" == channel){
+            text_area_log.setValue("param error, please choose version and channel again");
+            return;
+        }
         $.ajax({
             url : "/config2",
             dataType: 'json',
@@ -143,9 +144,7 @@
             },
             success : function(result) {
                 if(result){
-                    var text_area_config = mini.get("text_area_config");
-                    var text_area_config_json = mini.get("text_area_config_json");
-                    var text_area_log = mini.get("text_area_log");
+
                     switch (result.code)
                     {
                         case 200:
@@ -157,7 +156,7 @@
                                 text_area_config_json.setValue(text_area_config_show_json);
                                 text_area_config.setValue(result.activity);
                             }
-                            text_area_log.setValue("ok");
+                            text_area_log.setValue("get config ok");
                             break;
                         case 201:
                             text_area_log.setValue("error code:201,param error");
@@ -199,7 +198,7 @@
                     switch (result.code)
                     {
                         case 200:
-                            text_area_log.setValue("ok");
+                            text_area_log.setValue("save ok");
                             break;
                         case 201:
                             text_area_log.setValue("format error");
@@ -230,15 +229,6 @@
         var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
         text_area_config_json.setValue(text_area_config_show_json);
         text_area_log.setValue("format ok");
-    }
-
-    function onTime(){
-        mini.get("text_area_time_now").setValue(Math.floor(Date.now()/1000));
-    }
-
-    function onSpinnerValueChanged(){
-        var time_interval = mini.get("spinner_time_interval").getValue();
-        mini.get("text_area_time_after").setValue(Math.floor(Date.now()/1000 + time_interval*3600*24));
     }
 </script>
 
