@@ -46,6 +46,10 @@
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCheck">验证</a>
+<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onTime">时间</a>
+<a class="mini-textarea" style="width:100px;height:21px;" id="text_area_time_now"></a>
+<a class="mini-spinner" id="spinner_time_interval" style="width:100px;height:21px;" minValue="1" maxValue="100" onvaluechanged="onSpinnerValueChanged"></a>
+<a class="mini-textarea" style="width:100px;height:21px;" id="text_area_time_after"></a>
 <br /><br />
 <a
     <textarea id="text_area_config" class="mini-textarea"  style="width:800px;height:400px;"  value="<%= activity %>"  emptyText="{config}"></textarea>
@@ -226,6 +230,15 @@
         var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
         text_area_config_json.setValue(text_area_config_show_json);
         text_area_log.setValue("format ok");
+    }
+
+    function onTime(){
+        mini.get("text_area_time_now").setValue(Math.floor(Date.now()/1000));
+    }
+
+    function onSpinnerValueChanged(){
+        var time_interval = mini.get("spinner_time_interval").getValue();
+        mini.get("text_area_time_after").setValue(Math.floor(Date.now()/1000 + time_interval*3600*24));
     }
 </script>
 
