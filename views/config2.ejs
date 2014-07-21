@@ -33,8 +33,10 @@
 </div>
 
 <h4>选择版本</h4>
-<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="id"
-       data ="<%= versions %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."/>
+<input id="combo1" class="mini-combobox" style="width:150px;" textField="text" valueField="text" emptyText="<%= last_version_record %>"
+       data ="<%= versions %>" value="<%= last_version_record %>" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
+       onvaluechanged="onVersionChanged"
+       onvalidation="onComboValidation"/>
 
 <h4>选择渠道</h4>
 <input id="combo2" class="mini-combobox" style="width:150px;" textField="text"
@@ -168,12 +170,37 @@
         });
     }
 
+    function onVersionChanged(e){
+        var version = mini.get("combo1").getText();
+        var channel = "temp";
+        $.ajax({
+            url : "/config2",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"record",
+                version:version,
+                channel:channel
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
     function onValueChanged(e) {
         onShow();
     }
 
     function onComboValidation(e) {
-
+        onShow();
     }
     function onShow(){
         var version = mini.get("combo1").getText();

@@ -5,6 +5,8 @@ var express = require('express');
 var activity_wrapper = require('../module/activity_wrapper');
 var router = express.Router();
 
+var last_version_record = "0.0.0";
+
 /* GET home page. */
 router.get('/', function(req, res) {
     if(!req.session.user){
@@ -54,7 +56,7 @@ router.get('/', function(req, res) {
             activity:default_activity,
             versions:JSON.stringify(versions),
             channels:JSON.stringify(channels),
-            array:array,
+            last_version_record:last_version_record,
             data : JSON.stringify(data),
             link_show: req.session.user ? "注销":"登录",
             link: req.session.user ? "/logout":"/login"
@@ -66,12 +68,12 @@ router.post('/', function(req, res) {
     var type = req.body.type;
     var version = req.body.version;
     var channel = req.body.channel;
-    if(!version || !channel){
-        return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
-    }
     var result = {
         code :200
     };
+    if(!version || !channel){
+        return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
+    }
     if("show" == type){
         activity_wrapper.get_just(channel,version,function(reply){
             result.activity = reply;
@@ -113,6 +115,10 @@ router.post('/', function(req, res) {
                 return  res.end(JSON.stringify(result) + '\n', 'utf8');
             });
         }
+    }
+    else if("record" == type){
+        last_version_record = version;
+        return res.end(JSON.stringify(result) + '\n', 'utf8');
     }
 });
 
