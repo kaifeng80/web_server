@@ -5,7 +5,7 @@ var express = require('express');
 var activity_wrapper = require('../module/activity_wrapper');
 var router = express.Router();
 
-var last_version_record = "0.0.0";
+var last_version_record = "";
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
         var data = [];
         var versions = [];
         var channels = [];
-        var default_channel = "template:0.0.0";
+        var default_channel = "template:";
         var default_activity = {};
         var index = 1;
         for(var v in all_channel){
@@ -50,21 +50,7 @@ router.get('/', function(req, res) {
             }
             ++index;
         }
-        /*
-        //  not show the default template
-        for(var i = 0; i < versions.length; ++i){
-            if(versions[i].text == "0.0.0"){
-                versions.splice(i,1);
-                break;
-            }
-        }
-        for(var j = 0; j < channels.length; ++j){
-            if(channels[j].text == "template"){
-                channels.splice(i,1);
-                break;
-            }
-        }
-        */
+
         res.render('config2', {
             title: 'config',
             channel:default_channel,
