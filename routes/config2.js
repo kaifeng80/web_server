@@ -50,6 +50,7 @@ router.get('/', function(req, res) {
             }
             ++index;
         }
+        /*
         //  not show the default template
         for(var i = 0; i < versions.length; ++i){
             if(versions[i].text == "0.0.0"){
@@ -63,6 +64,7 @@ router.get('/', function(req, res) {
                 break;
             }
         }
+        */
         res.render('config2', {
             title: 'config',
             channel:default_channel,
