@@ -50,6 +50,19 @@ router.get('/', function(req, res) {
             }
             ++index;
         }
+        //  not show the default template
+        for(var i = 0; i < versions.length; ++i){
+            if(versions[i].text == "0.0.0"){
+                versions.splice(i,1);
+                break;
+            }
+        }
+        for(var j = 0; j < channels.length; ++j){
+            if(channels[j].text == "template"){
+                channels.splice(i,1);
+                break;
+            }
+        }
         res.render('config2', {
             title: 'config',
             channel:default_channel,
