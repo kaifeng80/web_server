@@ -47,9 +47,7 @@
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onDel">删除</a>
 <a class="mini-button" plain="true" iconCls="icon-remove" onclick="onSave">保存</a>
-<!--
-<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCheck">验证</a>
--->
+
 <br /><br />
 <a
     <textarea id="text_area_config" class="mini-textarea"  style="width:1200px;height:400px;"  value="please choose version and channel"  emptyText="{config}"></textarea>
@@ -59,8 +57,17 @@
     <textarea id="text_area_config_json" class="mini-textarea"  style="width:400px;height:400px;"  value=""  emptyText="{config}"></textarea>
     <br /><br />
 </a>
-    <textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:100px;"  value="ok"  emptyText="{config}"></textarea>
-    <br /><br />
+<h4>计划任务</h4>
+<input id="combo3" class="mini-combobox" style="width:150px;" textField="text" emptyText="src template"
+       data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
+       onvaluechanged="onValueChanged2" />
+
+<input id="combo4" class="mini-combobox" style="width:150px;" textField="text" emptyText="des template"
+       data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
+       onvaluechanged="onValueChanged2" />
+<input id="date1" class="mini-datepicker" value="<%= date %>" ondrawdate="onDrawDate" onvaluechanged="onDateChanged" />
+
+<textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:50px;"  value="ok"  emptyText="{config}"></textarea>
 
 <div id="container" class="container">
     <hr/>
@@ -199,6 +206,17 @@
         onShow();
     }
 
+    function onValueChanged2(e) {
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
+        var log_message = version + ":" + channel + " ";
+        var text_area_log = mini.get("text_area_log");
+        if("" == version){
+            log_message = log_message + "param error, please choose version first";
+            text_area_log.setValue(log_message);
+        }
+    }
+
     function onComboValidation(e) {
         onShow();
     }
@@ -323,6 +341,54 @@
         var text_area_config_show_json = jsonToStr(JSON.parse(activity), null, '\t');
         text_area_config_json.setValue(text_area_config_show_json);
         log_message = log_message + "format ok";
+        text_area_log.setValue(log_message);
+    }
+
+    function onDrawDate(){
+
+    }
+
+    function onDateChanged(){
+        var version = mini.get("combo1").getText();
+        var channel = mini.get("combo2").getText();
+        var channel_src = mini.get("combo3").getText();
+        var channel_des = mini.get("combo4").getText();
+        var plan_date = mini.get("date1").getValue();
+        var text_area_log = mini.get("text_area_log");
+        text_area_log.setValue(plan_date);
+        var log_message = version + ":" + channel_src + " " + channel_des + " " + plan_date + " ";
+        $.ajax({
+            url : "/config2",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"plan",
+                version:version,
+                channel:channel,
+                channel_src:channel_src,
+                channel_des:channel_des,
+                plan_date:plan_date
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            log_message = log_message + "---plan execute ok";
+                            break;
+                        case 202:
+                            log_message = log_message + "---plan execute error";
+                            break;
+                    }
+                    text_area_log.setValue(log_message);
+                    return;
+                }else{
+
+                }
+            }
+        });
+        log_message = log_message + "---plan set ok";
         text_area_log.setValue(log_message);
     }
 </script>

@@ -7,6 +7,64 @@ var router = express.Router();
 
 var last_version_record = "";
 
+function get_month(month_string){
+    var month = 0;
+    switch(month_string){
+        case "Jan":{
+            month = 0;
+            break;
+        }
+        case "Feb":{
+            month = 1;
+            break;
+        }
+        case "Mar":{
+            month = 2;
+            break;
+        }
+        case "Apr":{
+            month = 3;
+            break;
+        }
+        case "May":{
+            month = 4;
+            break;
+        }
+        case "Jun":{
+            month = 5;
+            break;
+        }
+        case "Jul":{
+            month = 6;
+            break;
+        }
+        case "Aug":{
+            month = 7;
+            break;
+        }
+        case "Sep":{
+            month = 8;
+            break;
+        }
+        case "Oct":{
+            month = 9;
+            break;
+        }
+        case "Nov":{
+            month = 10;
+            break;
+        }
+        case "Dec":{
+            month = 11;
+            break;
+        }
+        default :{
+            break;
+        }
+    }
+    return month;
+};
+
 /* GET home page. */
 router.get('/', function(req, res) {
     if(!req.session.user){
@@ -50,7 +108,11 @@ router.get('/', function(req, res) {
             }
             ++index;
         }
-
+        var date_now = new Date();
+        var month_now = date_now.getMonth() + 1;
+        var day_now = date_now.getDate();
+        var year_now = date_now.getFullYear();
+        var date_format = year_now + "-" + month_now + "-" + day_now;
         res.render('config2', {
             title: 'config',
             channel:default_channel,
@@ -59,6 +121,7 @@ router.get('/', function(req, res) {
             channels:JSON.stringify(channels),
             last_version_record:last_version_record,
             data : JSON.stringify(data),
+            date:date_format,
             link_show: req.session.user ? "注销":"登录",
             link: req.session.user ? "/logout":"/login"
         });
@@ -121,6 +184,34 @@ router.post('/', function(req, res) {
         last_version_record = version;
         return res.end(JSON.stringify(result) + '\n', 'utf8');
     }
+    else if("plan" == type){
+        var channel_src = req.body.channel_src;
+        var channel_des = req.body.channel_des;
+        var plan_date = req.body.plan_date;
+        plan_date = plan_date.split(' ');
+        var month = get_month(plan_date[1]) + 1;
+        var day = parseInt(plan_date[2]);
+        var year = parseInt(plan_date[3]);
+        var date_future = new Date(year,month,day);
+        var date_now_tmp = new Date();
+        var month_now = date_now_tmp.getMonth(); + 1
+        var day_now = date_now_tmp.getDate();
+        var year_now = date_now_tmp.getFullYear();
+        var date_now = new Date(year_now,month_now,day_now);
+        var timer_interval = date_future.getTime() - date_now.getTime();
+        var interval_object = setInterval(function(){
+            activity_wrapper.get_just(channel_src,version,function(activity){
+                if(activity){
+                    activity_wrapper.save(channel_des + ":" + version,activity,function(reply){
+                        if(0 != reply){
+                            result.code = 202;
+                        }
+                        res.end(JSON.stringify(result) + '\n', 'utf8');
+                    });
+                }
+            });
+            clearInterval(interval_object);
+        },1000*60);
+    }
 });
-
 module.exports = router;
