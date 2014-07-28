@@ -6,7 +6,8 @@ var activity_wrapper = require('../module/activity_wrapper');
 var router = express.Router();
 
 var last_version_record = "";
-
+var schedule_list = [];
+var schedule_timer_list = [];
 function get_month(month_string){
     var month = 0;
     switch(month_string){
@@ -108,11 +109,13 @@ router.get('/', function(req, res) {
             }
             ++index;
         }
+        //  show schedule initialize date
         var date_now = new Date();
         var month_now = date_now.getMonth() + 1;
         var day_now = date_now.getDate();
         var year_now = date_now.getFullYear();
         var date_format = year_now + "-" + month_now + "-" + day_now;
+
         res.render('config2', {
             title: 'config',
             channel:default_channel,
@@ -122,6 +125,7 @@ router.get('/', function(req, res) {
             last_version_record:last_version_record,
             data : JSON.stringify(data),
             date:date_format,
+            schedule_list:JSON.stringify(schedule_list),
             link_show: req.session.user ? "注销":"登录",
             link: req.session.user ? "/logout":"/login"
         });
@@ -136,7 +140,9 @@ router.post('/', function(req, res) {
         code :200
     };
     if(!version || !channel){
-        return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
+        if("plan" != type){
+            return res.end(JSON.stringify({code:201}) + '\n', 'utf8');
+        }
     }
     if("show" == type){
         activity_wrapper.get_just(channel,version,function(reply){
@@ -148,10 +154,11 @@ router.post('/', function(req, res) {
         });
     }
     else if("add" == type){
-        activity_wrapper.add(channel,version,function(reply){
+        activity_wrapper.add(channel,version,function(reply,activity){
             if(1 != reply){
                 result.code = 202;
             }
+            result.activity = activity;
             return  res.end(JSON.stringify(result) + '\n', 'utf8');
         });
     }
@@ -194,24 +201,45 @@ router.post('/', function(req, res) {
         var year = parseInt(plan_date[3]);
         var date_future = new Date(year,month,day);
         var date_now_tmp = new Date();
-        var month_now = date_now_tmp.getMonth(); + 1
+        var month_now = date_now_tmp.getMonth() + 1;
         var day_now = date_now_tmp.getDate();
         var year_now = date_now_tmp.getFullYear();
-        var date_now = new Date(year_now,month_now,day_now);
+
+        var hours_now = date_now_tmp.getHours();
+        var minutes_now = date_now_tmp.getMinutes();
+        var second_now = date_now_tmp.getSeconds();
+
+        var date_now = new Date(year_now,month_now,day_now,hours_now,minutes_now,second_now);
         var timer_interval = date_future.getTime() - date_now.getTime();
         var interval_object = setInterval(function(){
             activity_wrapper.get_just(channel_src,version,function(activity){
                 if(activity){
                     activity_wrapper.save(channel_des + ":" + version,activity,function(reply){
-                        if(0 != reply){
-                            result.code = 202;
-                        }
-                        res.end(JSON.stringify(result) + '\n', 'utf8');
+
                     });
                 }
             });
             clearInterval(interval_object);
-        },1000*60);
+            for(var n = 0; n < schedule_timer_list.length; ++n){
+                if(interval_object == schedule_timer_list[n]){
+                    schedule_list.splice(n,1);
+                    schedule_timer_list.splice(n,1);
+                }
+            }
+        },timer_interval);
+        schedule_list.push({id:schedule_list.length,text:JSON.stringify({channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
+        schedule_timer_list.push(interval_object);
+        result.code = 205;
+        result.schedule_list = schedule_list;
+        return res.end(JSON.stringify(result) + '\n', 'utf8');
+    }
+    else if("clean" == type){
+        for(var n = 0; n < schedule_timer_list.length; ++n){
+            clearInterval(schedule_timer_list[n]);
+        }
+        schedule_list = [];
+        schedule_timer_list = [];
+        return res.end(JSON.stringify(result) + '\n', 'utf8');
     }
 });
 module.exports = router;

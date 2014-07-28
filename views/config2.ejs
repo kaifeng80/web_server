@@ -50,11 +50,11 @@
 
 <br /><br />
 <a
-    <textarea id="text_area_config" class="mini-textarea"  style="width:1200px;height:400px;"  value="please choose version and channel"  emptyText="{config}"></textarea>
+    <textarea id="text_area_config" class="mini-textarea"  style="width:1200px;height:300px;"  value="please choose version and channel"  emptyText="{config}"></textarea>
     <br /><br />
 </a>
 <a
-    <textarea id="text_area_config_json" class="mini-textarea"  style="width:400px;height:400px;"  value=""  emptyText="{config}"></textarea>
+    <textarea id="text_area_config_json" class="mini-textarea"  style="width:400px;height:300px;"  value=""  emptyText="{config}"></textarea>
     <br /><br />
 </a>
 <h4>计划任务</h4>
@@ -66,6 +66,12 @@
        data ="<%= channels %>" value="cn" required="true" allowInput="true" showNullItem="true" nullItemText="请选择..."
        onvaluechanged="onValueChanged2" />
 <input id="date1" class="mini-datepicker" value="<%= date %>" ondrawdate="onDrawDate" onvaluechanged="onDateChanged" />
+
+<h4>当前计划任务列表</h4>
+<div id="listbox1" class="mini-listbox" style="width:1605px;height:100px;" data ="<%= schedule_list %>"
+     textField="text" valueField="id" >
+</div>
+<a class="mini-button" plain="true" iconCls="icon-remove" onclick="onCleanAll">清空计划任务</a>
 
 <textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:50px;"  value="ok"  emptyText="{config}"></textarea>
 
@@ -100,6 +106,8 @@
     function onAdd(e) {
         var new_version = mini.get("combo1").getText();
         var new_channel = mini.get("combo2").getText();
+        var text_area_config = mini.get("text_area_config");
+        var text_area_config_json = mini.get("text_area_config_json");
         var log_message = new_version + ":" + new_channel + " ";
         if("" == new_version || "" == new_channel){
             log_message = log_message + "param error, please choose version and channel again";
@@ -122,6 +130,9 @@
                     {
                         case 200:
                             log_message = log_message + "add config ok";
+                            var text_area_config_show_json = jsonToStr(JSON.parse(result.activity), null, '\t');
+                            text_area_config_json.setValue(text_area_config_show_json);
+                            text_area_config.setValue(result.activity);
                             break;
                         case 202:
                             log_message = log_message + "add config error,you must make sure the version' default template exits!";
@@ -355,7 +366,11 @@
         var channel_des = mini.get("combo4").getText();
         var plan_date = mini.get("date1").getValue();
         var text_area_log = mini.get("text_area_log");
-        text_area_log.setValue(plan_date);
+        if("" == version || "" == channel_src || "" == channel_des || "" == plan_date){
+            log_message = log_message + "param error, please choose version and channel_src, channel_des again";
+            text_area_log.setValue(log_message);
+            return;
+        }
         var log_message = version + ":" + channel_src + " " + channel_des + " " + plan_date + " ";
         $.ajax({
             url : "/config2",
@@ -376,21 +391,56 @@
                     {
                         case 200:
                             log_message = log_message + "---plan execute ok";
+                            text_area_log.setValue(log_message);
                             break;
                         case 202:
                             log_message = log_message + "---plan execute error";
+                            text_area_log.setValue(log_message);
+                            break;
+                        case 205:
+                            log_message = log_message + "---plan set ok";
+                            text_area_log.setValue(log_message);
+                            mini.get("listbox1").removeAll();
+                            for(var i = 0; i < result.schedule_list.length; ++i){
+                                mini.get("listbox1").addItem({id:result.schedule_list[i].id,text:result.schedule_list[i].text},i);
+                            }
                             break;
                     }
-                    text_area_log.setValue(log_message);
                     return;
                 }else{
 
                 }
             }
         });
-        log_message = log_message + "---plan set ok";
-        text_area_log.setValue(log_message);
     }
+
+    function onCleanAll(){
+        $.ajax({
+            url : "/config2",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"clean",
+                version:"no_version",
+                channel:"no_channel"
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            mini.get("text_area_log").setValue("clean ok");
+                            mini.get("listbox1").removeAll();
+                            break;
+                    }
+                }else{
+
+                }
+            }
+        });
+    }
+
 </script>
 
 <script src="/javascripts/jquery.js"></script>

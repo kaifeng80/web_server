@@ -35,13 +35,13 @@ activity_wrapper.add = function(channel,version,cb){
     redis_activity_wrapper.get_activity("template",version,function(activity){
         if(activity){
             redis_activity_wrapper.add_activity(channel,version,JSON.parse(activity),function(reply){
-                cb(reply);
+                cb(reply,activity);
             });
         }
         else{
             //  error,you must make sure the version' default template exits!
             //  hget return value or null
-            cb(0);
+            cb(0,null);
         }
     });
 };
