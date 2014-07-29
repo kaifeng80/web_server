@@ -227,7 +227,7 @@ router.post('/', function(req, res) {
                 }
             }
         },timer_interval);
-        schedule_list.push({id:schedule_list.length,text:JSON.stringify({channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
+        schedule_list.push({id:schedule_list.length,text:JSON.stringify({version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
         schedule_timer_list.push(interval_object);
         result.code = 205;
         result.schedule_list = schedule_list;
