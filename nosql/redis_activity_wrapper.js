@@ -11,6 +11,7 @@ redis_activity_wrapper.add_activity = function(channel,varsion,activity,cb){
         client.hset(h_activity,channel + ':' + varsion,JSON.stringify(activity),function (err, reply){
             if(err){
                 //  some thing log
+                console.error(err);
             }
             cb(reply);
             release();
@@ -23,6 +24,7 @@ redis_activity_wrapper.del_activity = function(channel,varsion,cb){
         client.hdel(h_activity,channel + ':' + varsion,function (err, reply){
             if(err){
                 //  some thing log
+                console.error(err);
             }
             cb(reply);
             release();
@@ -35,6 +37,7 @@ redis_activity_wrapper.save_activity = function(channel_varsion,activity,cb){
         client.hset(h_activity,channel_varsion,activity,function (err, reply){
             if(err){
                 //  some thing log
+                console.error(err);
             }
             cb(reply);
             release();
@@ -47,6 +50,7 @@ redis_activity_wrapper.get_activity = function(channel,version,cb){
         client.hget(h_activity,channel + ':' + version,function (err, reply){
             if(err){
                 //  some thing log
+                console.error(err);
             }
             cb(reply);
             release();
@@ -59,6 +63,7 @@ redis_activity_wrapper.get_all_activity = function(cb){
         client.hgetall(h_activity,function (err, reply){
             if(err){
                 //  some thing log
+                console.error(err);
             }
             cb(reply);
             release();

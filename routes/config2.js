@@ -3,68 +3,11 @@
  */
 var express = require('express');
 var activity_wrapper = require('../module/activity_wrapper');
+var schedule_wrapper = require('../module/schedule_wrapper');
+
 var router = express.Router();
 
 var last_version_record = "";
-var schedule_list = [];
-var schedule_timer_list = [];
-function get_month(month_string){
-    var month = 0;
-    switch(month_string){
-        case "Jan":{
-            month = 0;
-            break;
-        }
-        case "Feb":{
-            month = 1;
-            break;
-        }
-        case "Mar":{
-            month = 2;
-            break;
-        }
-        case "Apr":{
-            month = 3;
-            break;
-        }
-        case "May":{
-            month = 4;
-            break;
-        }
-        case "Jun":{
-            month = 5;
-            break;
-        }
-        case "Jul":{
-            month = 6;
-            break;
-        }
-        case "Aug":{
-            month = 7;
-            break;
-        }
-        case "Sep":{
-            month = 8;
-            break;
-        }
-        case "Oct":{
-            month = 9;
-            break;
-        }
-        case "Nov":{
-            month = 10;
-            break;
-        }
-        case "Dec":{
-            month = 11;
-            break;
-        }
-        default :{
-            break;
-        }
-    }
-    return month;
-};
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -115,7 +58,8 @@ router.get('/', function(req, res) {
         var day_now = date_now.getDate();
         var year_now = date_now.getFullYear();
         var date_format = year_now + "-" + month_now + "-" + day_now;
-
+        var schedule_list = [];
+        schedule_list = schedule_wrapper.get_schedule_list();
         res.render('config2', {
             title: 'config',
             channel:default_channel,
@@ -195,50 +139,15 @@ router.post('/', function(req, res) {
         var channel_src = req.body.channel_src;
         var channel_des = req.body.channel_des;
         var plan_date = req.body.plan_date;
-        plan_date = plan_date.split(' ');
-        var month = get_month(plan_date[1]) + 1;
-        var day = parseInt(plan_date[2]);
-        var year = parseInt(plan_date[3]);
-        var date_future = new Date(year,month,day);
-        var date_now_tmp = new Date();
-        var month_now = date_now_tmp.getMonth() + 1;
-        var day_now = date_now_tmp.getDate();
-        var year_now = date_now_tmp.getFullYear();
-
-        var hours_now = date_now_tmp.getHours();
-        var minutes_now = date_now_tmp.getMinutes();
-        var second_now = date_now_tmp.getSeconds();
-
-        var date_now = new Date(year_now,month_now,day_now,hours_now,minutes_now,second_now);
-        var timer_interval = date_future.getTime() - date_now.getTime();
-        var interval_object = setInterval(function(){
-            activity_wrapper.get_just(channel_src,version,function(activity){
-                if(activity){
-                    activity_wrapper.save(channel_des + ":" + version,activity,function(reply){
-
-                    });
-                }
-            });
-            clearInterval(interval_object);
-            for(var n = 0; n < schedule_timer_list.length; ++n){
-                if(interval_object == schedule_timer_list[n]){
-                    schedule_list.splice(n,1);
-                    schedule_timer_list.splice(n,1);
-                }
-            }
-        },timer_interval);
-        schedule_list.push({id:schedule_list.length,text:JSON.stringify({version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
-        schedule_timer_list.push(interval_object);
-        result.code = 205;
-        result.schedule_list = schedule_list;
-        return res.end(JSON.stringify(result) + '\n', 'utf8');
+        schedule_wrapper.create_timer(version,channel_src,channel_des,plan_date,0,function(schedule_list){
+            result.code = 205;
+            result.schedule_list = schedule_list;
+            return res.end(JSON.stringify(result) + '\n', 'utf8');
+        });
     }
     else if("clean" == type){
-        for(var n = 0; n < schedule_timer_list.length; ++n){
-            clearInterval(schedule_timer_list[n]);
-        }
-        schedule_list = [];
-        schedule_timer_list = [];
+        var schedule_timer_list = schedule_wrapper.get_schedule_timer_list();
+        schedule_wrapper.clear_schedule();
         return res.end(JSON.stringify(result) + '\n', 'utf8');
     }
 });
