@@ -59,7 +59,9 @@ router.get('/', function(req, res) {
         var year_now = date_now.getFullYear();
         var date_format = year_now + "-" + month_now + "-" + day_now;
         var schedule_list = [];
+        var schedule_log_list = [];
         schedule_list = schedule_wrapper.get_schedule_list();
+        schedule_log_list = schedule_wrapper.get_schedule_log_list();
         res.render('config2', {
             title: 'config',
             channel:default_channel,
@@ -70,6 +72,7 @@ router.get('/', function(req, res) {
             data : JSON.stringify(data),
             date:date_format,
             schedule_list:JSON.stringify(schedule_list),
+            schedule_log_list:JSON.stringify(schedule_log_list),
             link_show: req.session.user ? "注销":"登录",
             link: req.session.user ? "/logout":"/login"
         });
@@ -142,12 +145,14 @@ router.post('/', function(req, res) {
         schedule_wrapper.create_timer(version,channel_src,channel_des,plan_date,0,function(schedule_list){
             result.code = 205;
             result.schedule_list = schedule_list;
+            result.schedule_log_list = schedule_wrapper.get_schedule_log_list();
             return res.end(JSON.stringify(result) + '\n', 'utf8');
         });
     }
     else if("clean" == type){
         var schedule_timer_list = schedule_wrapper.get_schedule_timer_list();
         schedule_wrapper.clear_schedule();
+        result.schedule_log_list = schedule_wrapper.get_schedule_log_list();
         return res.end(JSON.stringify(result) + '\n', 'utf8');
     }
 });

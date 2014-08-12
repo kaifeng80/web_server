@@ -5,6 +5,7 @@ var redis_schedule_wrapper = require('../nosql/redis_schedule_wrapper');
 var activity_wrapper = require('../module/activity_wrapper');
 
 var schedule_list = [];
+var schedule_log_list = [];
 var schedule_timer_list = [];
 
 var schedule_wrapper = module.exports;
@@ -21,10 +22,26 @@ schedule_wrapper.init = function() {
             }
         }
     });
+
+    redis_schedule_wrapper.get_all_schedule_log(function(reply){
+        if(reply){
+            for(var v in reply){
+                var schedule = JSON.parse(reply[v]);
+                var text = JSON.parse(schedule.text);
+                var operator = JSON.parse(v);
+                schedule_log_list.push({id:schedule_log_list.length,text:JSON.stringify({type:operator.type ,time:operator.time ,
+                    version:text.version,channel_src:text.channel_src,channel_des:text.channel_des,plan_date:text.plan_date}) });
+            }
+        }
+    });
 };
 
 schedule_wrapper.get_schedule_list = function() {
     return schedule_list;
+};
+
+schedule_wrapper.get_schedule_log_list = function() {
+    return schedule_log_list;
 };
 
 schedule_wrapper.get_schedule_timer_list = function() {
@@ -51,6 +68,11 @@ schedule_wrapper.clear_schedule = function() {
     for(var n = 0; n < schedule_timer_list.length; ++n){
         clearInterval(schedule_timer_list[n][1]);
         schedule_wrapper.del_schedule(schedule_timer_list[n][0]);
+        redis_schedule_wrapper.add_schedule_log("clean",schedule_list[n]);
+        var text = JSON.parse(schedule_list[n].text);
+        var time_now = new Date();
+        schedule_log_list.push({id:schedule_log_list.length,text:JSON.stringify({type:"clean" ,time:time_now.toLocaleString(),
+            version:text.version,channel_src:text.channel_src,channel_des:text.channel_des,plan_date:text.plan_date}) });
     }
     schedule_list = [];
     schedule_timer_list = [];
@@ -87,6 +109,11 @@ schedule_wrapper.create_timer = function(version,channel_src,channel_des,plan_da
         for(var n = 0; n < schedule_timer_list.length; ++n){
             if(interval_object == schedule_timer_list[n][1]){
                 schedule_wrapper.del_schedule(schedule_timer_list[n][0]);
+                redis_schedule_wrapper.add_schedule_log("excute",schedule_list[n]);
+                var text = JSON.parse(schedule_list[n].text);
+                var time_now = new Date();
+                schedule_log_list.push({id:schedule_log_list.length,text:JSON.stringify({type:"excute" ,time:time_now.toLocaleString() ,
+                    version:text.version,channel_src:text.channel_src,channel_des:text.channel_des,plan_date:text.plan_date}) });
                 schedule_list.splice(n,1);
                 schedule_timer_list.splice(n,1);
             }
@@ -95,7 +122,10 @@ schedule_wrapper.create_timer = function(version,channel_src,channel_des,plan_da
     var time_now = timer_id;
     if(!time_now){
         time_now = Date.now();
+        var time_now2 = new Date();
         schedule_wrapper.add_schedule(time_now,{id:schedule_list.length,text:JSON.stringify({version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
+        redis_schedule_wrapper.add_schedule_log("add",{id:schedule_list.length,text:JSON.stringify({version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
+        schedule_log_list.push({id:schedule_log_list.length,text:JSON.stringify({type:"add" ,time:time_now2.toLocaleString(),version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });
     }
     schedule_timer_list.push([time_now,interval_object]);
     schedule_list.push({id:schedule_list.length,text:JSON.stringify({version:version,channel_src:channel_src,channel_des:channel_des,plan_date:plan_date}) });

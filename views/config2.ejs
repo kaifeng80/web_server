@@ -75,6 +75,11 @@
 
 <textarea id="text_area_log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:50px;"  value="ok"  emptyText="{config}"></textarea>
 
+<h4>计划任务日志</h4>
+<div id="listbox2" class="mini-listbox" style="width:1605px;height:200px;" data ="<%= schedule_log_list %>"
+     textField="text" valueField="id" >
+</div>
+
 <div id="container" class="container">
     <hr/>
     <footer>
@@ -401,8 +406,12 @@
                             log_message = log_message + "---plan set ok";
                             text_area_log.setValue(log_message);
                             mini.get("listbox1").removeAll();
+                            mini.get("listbox2").removeAll();
                             for(var i = 0; i < result.schedule_list.length; ++i){
                                 mini.get("listbox1").addItem({id:result.schedule_list[i].id,text:result.schedule_list[i].text},i);
+                            }
+                            for(var i = 0; i < result.schedule_log_list.length; ++i){
+                                mini.get("listbox2").addItem({id:result.schedule_log_list[i].id,text:result.schedule_log_list[i].text},i);
                             }
                             break;
                     }
@@ -432,6 +441,10 @@
                         case 200:
                             mini.get("text_area_log").setValue("clean ok");
                             mini.get("listbox1").removeAll();
+                            mini.get("listbox2").removeAll();
+                            for(var i = 0; i < result.schedule_log_list.length; ++i){
+                                mini.get("listbox2").addItem({id:result.schedule_log_list[i].id,text:result.schedule_log_list[i].text},i);
+                            }
                             break;
                     }
                 }else{
