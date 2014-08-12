@@ -12,7 +12,7 @@ redis_user_wrapper.get_user = function(name,cb){
         client.hget(h_user,name,function (err, reply){
             if(err){
                 //  some thing log
-                console.error(error);
+                console.error(err);
                 return;
             }
             var __user_auth = new user();
