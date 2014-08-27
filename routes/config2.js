@@ -48,7 +48,9 @@ router.get('/', function(req, res) {
                 versions.push({id:index,text:array_version_chanel[1]});
             }
             if(!find_channel){
-                channels.push({id:index,text:array_version_chanel[0]});
+                if(last_version_record == array_version_chanel[1]){
+                    channels.push({id:index,text:array_version_chanel[0]});
+                }
             }
             ++index;
         }
@@ -136,7 +138,35 @@ router.post('/', function(req, res) {
     }
     else if("record" == type){
         last_version_record = version;
-        return res.end(JSON.stringify(result) + '\n', 'utf8');
+
+        activity_wrapper.get_all(function(reply){
+            var all_channel = reply;
+            var channels = [];
+            var default_channel = "template:";
+            var default_activity = {};
+            var index = 1;
+            for(var v in all_channel){
+                if(default_channel == v){
+                    default_activity = all_channel[v];
+                }
+                var version_chanel = v;
+                var array_version_chanel = version_chanel.split(':');
+                var  find_channel = false;
+                for(var j = 0; j < channels.length; ++j){
+                    if(channels[j].text == array_version_chanel[0]){
+                        find_channel = true;
+                    }
+                }
+                if(!find_channel){
+                    if(last_version_record == array_version_chanel[1]){
+                        channels.push({id:index,text:array_version_chanel[0]});
+                    }
+                }
+                ++index;
+            }
+            result.channels = channels;
+            return res.end(JSON.stringify(result) + '\n', 'utf8');
+        });
     }
     else if("plan" == type){
         var channel_src = req.body.channel_src;

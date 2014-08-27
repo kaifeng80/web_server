@@ -211,6 +211,8 @@
                     switch (result.code)
                     {
                         case 200:
+                            var channels = result.channels;
+                            mini.get("combo2").setData(channels);
                             break;
                     }
                 }
