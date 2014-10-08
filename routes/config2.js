@@ -180,7 +180,6 @@ router.post('/', function(req, res) {
         });
     }
     else if("clean" == type){
-        var schedule_timer_list = schedule_wrapper.get_schedule_timer_list();
         schedule_wrapper.clear_schedule();
         result.schedule_log_list = schedule_wrapper.get_schedule_log_list();
         return res.end(JSON.stringify(result) + '\n', 'utf8');
