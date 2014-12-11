@@ -138,6 +138,10 @@
                             var text_area_config_show_json = jsonToStr(JSON.parse(result.activity), null, '\t');
                             text_area_config_json.setValue(text_area_config_show_json);
                             text_area_config.setValue(result.activity);
+                            var data = mini.get("combo2").getData();
+                            data.push({id:data.length,text:new_channel});
+                            mini.get("combo2").setData(data);
+                            mini.get("combo2").select(data.length - 1);
                             break;
                         case 202:
                             log_message = log_message + "add config error,you must make sure the version' default template exits!";
