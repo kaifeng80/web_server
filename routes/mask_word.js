@@ -7,7 +7,10 @@ var mask_word_wrapper = require('../module/mask_word_wrapper');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('mask_word', { title: 'Express' });
+    if(!req.session.user){
+        return res.redirect('/login');
+    }
+    res.render('mask_word', { title: 'Express',link_show: req.session.user ? "注销":"登录",link: req.session.user ? "/logout":"/login"});
 });
 
 router.post('/', function(req, res) {

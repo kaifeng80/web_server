@@ -12,6 +12,27 @@
     <link href="stylesheets/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">tools</a>
+
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li><a href="/">首页</a></li>
+                    <li><a href=<%= link %> ><%= link_show %></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h4>添加关键字</h4>
 <input id="tb" class="mini-textbox" emptyText="请输入关键字"/>
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
