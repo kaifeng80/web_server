@@ -10,3 +10,7 @@ mask_word_wrapper.add = function(keyword,cb){
 mask_word_wrapper.del = function(keyword,cb){
     redis_mask_word_wrapper.del_online(keyword,cb);
 };
+
+mask_word_wrapper.get_all = function(cb){
+    redis_mask_word_wrapper.get_all_online(cb);
+};

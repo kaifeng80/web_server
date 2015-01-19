@@ -33,11 +33,13 @@
     </div>
 </div>
 
+<h4>现有关键字</h4>
+<textarea id="all_mask_word" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:400px;"   value="<%= data %>"  emptyText=""></textarea>
 <h4>添加关键字</h4>
 <input id="tb" class="mini-textbox" emptyText="请输入关键字"/>
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onAdd">添加</a>
 <a class="mini-button " plain="true" iconCls="icon-add" onclick="onDel">删除</a>
-<textarea id="log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:50px;"  value="ok"  emptyText="{config}"></textarea>
+<textarea id="log" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:50px;"  value=""  emptyText=""></textarea>
 <script type="text/javascript">
     function onAdd(e) {
         var keyword = mini.get("tb").getValue();
@@ -55,6 +57,7 @@
                     switch (result.code)
                     {
                         case 200:
+                            mini.get("all_mask_word").setValue(result.data);
                             mini.get("log").setValue("add ok");
                             break;
                     }
@@ -80,6 +83,7 @@
                     switch (result.code)
                     {
                         case 200:
+                            mini.get("all_mask_word").setValue(result.data);
                             mini.get("log").setValue("del ok");
                             break;
                     }

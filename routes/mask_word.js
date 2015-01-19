@@ -10,7 +10,13 @@ router.get('/', function(req, res) {
     if(!req.session.user){
         return res.redirect('/login');
     }
-    res.render('mask_word', { title: 'Express',link_show: req.session.user ? "注销":"登录",link: req.session.user ? "/logout":"/login"});
+    mask_word_wrapper.get_all(function(reply){
+        res.render('mask_word', { title: 'Express',
+            link_show: req.session.user ? "注销":"登录",
+            link: req.session.user ? "/logout":"/login",
+            data:reply
+        });
+    });
 });
 
 router.post('/', function(req, res) {
@@ -24,7 +30,10 @@ router.post('/', function(req, res) {
             if(!reply){
                 code :201
             }
-            return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            mask_word_wrapper.get_all(function(reply){
+                result.data = reply;
+                return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            });
         });
     }else if(type == "del"){
         mask_word_wrapper.del(keyword,function(reply){
@@ -33,7 +42,10 @@ router.post('/', function(req, res) {
                     code :201
                 }
             }
-            return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            mask_word_wrapper.get_all(function(reply){
+                result.data = reply;
+                return  res.end(JSON.stringify(result) + '\n', 'utf8');
+            });
         });
     }
 
