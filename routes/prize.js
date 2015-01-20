@@ -135,6 +135,9 @@ router.post('/', function(req, res) {
                             });
                         },
                         function(phone,name,callback){
+                            if(!phone){
+                                phone = "no_phone_record";
+                            }
                             prize_real_list.push([phone,name]);
                             callback(null);
                         }
