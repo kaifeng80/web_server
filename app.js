@@ -19,6 +19,7 @@ var config = require('./routes/config');
 var config2 = require('./routes/config2');
 var save = require('./routes/save');
 var mask_word = require('./routes/mask_word');
+var prize = require('./routes/prize');
 var app = express();
 
 // view engine setup
@@ -48,6 +49,7 @@ app.use('/config', config);
 app.use('/config2', config2);
 app.use('/save', save);
 app.use('/mask_word', mask_word);
+app.use('/prize', prize);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
