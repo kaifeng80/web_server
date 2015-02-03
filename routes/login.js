@@ -18,7 +18,7 @@ router.post('/', function(req, res) {
         }
         else{
             req.session.user = user;
-            return res.redirect('/config2');
+            return res.redirect('/pvp_blacklist');
         }
     });
 });
