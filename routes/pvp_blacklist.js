@@ -32,6 +32,12 @@ router.get('/', function(req, res) {
                 black_list_show.push(black)
             }
         }
+        black_list_show.sort(function(a,b){
+            if (a.count > b.count)
+                return -1;
+            if (a.count < b.count)
+                return 1;
+        });
         var string_black_list_show = "";
         for(var j = 0; j < black_list_show.length; ++j){
             string_black_list_show += JSON.stringify(black_list_show[j]);
