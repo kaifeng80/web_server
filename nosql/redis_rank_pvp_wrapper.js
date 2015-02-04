@@ -160,7 +160,7 @@ redis_rank_pvp_wrapper.update_rank_info = function(device_guid,device_emui,chann
             rank_info.area = area;
             rank_info.phone_number = phone_number;
             rank_info.nickname = nickname;
-            redis_rank_pvp_wrapper.set_rank_info(channel,device_guid,rank_info);
+            redis_rank_pvp_wrapper.set_rank_info(channel,device_guid,rank_info,function(){});
         }
         cb(rank_info);
     });
@@ -556,7 +556,7 @@ redis_rank_pvp_wrapper.disappear_from_rank_pvp = function(device_guid){
                     });
                 });
                 rank_info.blocked = 1;
-                redis_rank_pvp_wrapper.set_rank_info(rank_info.channel,device_guid,function(){});
+                redis_rank_pvp_wrapper.set_rank_info(rank_info.channel,device_guid,rank_info,function(){});
             }
             release();
         });
