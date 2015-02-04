@@ -2,7 +2,6 @@
  * Created by King Lee on 2015/1/5.
  */
 var redis_pools = require("../nosql/redis_pools");
-var pomelo = require('pomelo');
 var async = require('async');
 var log4js = require('log4js');
 var util = require('../module/util');
