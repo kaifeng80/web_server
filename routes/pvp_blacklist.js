@@ -15,13 +15,15 @@ router.get('/', function(req, res) {
         for(var i = 0; i < black_list.length; ++i){
             var black = new Object();
             var find = false;
+            var index = 0;
             for(var j = 0; j < black_list_show.length; ++j){
-                if(black_list[i] == black_list_show[j]){
+                if(black_list[i].device_guid == black_list_show[j].device_guid){
                     find = true;
+                    index = j;
                 }
             }
             if(find){
-                ++black_list_show.count;
+                ++black_list_show[index].count;
             }else{
                 black.nickname = black_list[i].nickname;
                 black.device_guid = black_list[i].device_guid;
