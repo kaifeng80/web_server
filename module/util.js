@@ -42,3 +42,61 @@ utils.genRandom = function(  e,  min_value,  offset )
 {
     return utils.genNormalDistributionValue2( min_value, e + offset, e, ( e - min_value ) / 2.5 );
 };
+
+utils.get_month = function (month_string){
+    var month = 0;
+    switch(month_string){
+        case "Jan":{
+            month = 0;
+            break;
+        }
+        case "Feb":{
+            month = 1;
+            break;
+        }
+        case "Mar":{
+            month = 2;
+            break;
+        }
+        case "Apr":{
+            month = 3;
+            break;
+        }
+        case "May":{
+            month = 4;
+            break;
+        }
+        case "Jun":{
+            month = 5;
+            break;
+        }
+        case "Jul":{
+            month = 6;
+            break;
+        }
+        case "Aug":{
+            month = 7;
+            break;
+        }
+        case "Sep":{
+            month = 8;
+            break;
+        }
+        case "Oct":{
+            month = 9;
+            break;
+        }
+        case "Nov":{
+            month = 10;
+            break;
+        }
+        case "Dec":{
+            month = 11;
+            break;
+        }
+        default :{
+            break;
+        }
+    }
+    return month;
+};

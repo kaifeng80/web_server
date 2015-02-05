@@ -32,6 +32,8 @@
     </div>
 </div>
 <h4>黑名单:</h4>
+<input id="date1" class="mini-datepicker" value="<%= date %>"  onvaluechanged="onDateChanged" />
+<div id="ck1" name="product" class="mini-checkbox" checked="false" readOnly="false" text="MM争霸赛" onvaluechanged="onValueChanged"></div>
 <textarea id="textarea_list" class="mini-textarea" class="auto_textarea"  style="width:1605px;height:500px;" wrap="soft" value=<%= black_list %>  emptyText=""></textarea>
 <h4>请输入device guid</h4>
 <input id="tb" class="mini-textbox" emptyText="device guid"/>
@@ -88,6 +90,60 @@
                     {
                         case 200:
                             mini.get("log").setValue("restore ok");
+                            break;
+                    }
+                }else{
+
+                }
+            }
+        });
+    }
+    function onDateChanged(e){
+        var select_date = mini.get("date1").getValue();
+        $.ajax({
+            url : "/pvp_blacklist",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"date",
+                select_date:select_date
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            mini.get("textarea_list").setValue("");
+                            mini.get("textarea_list").setValue(result.string_black_list_show);
+                            mini.get("log").setValue("get ok");
+                            break;
+                    }
+                }else{
+
+                }
+            }
+        });
+    }
+    function onValueChanged(e){
+        var checked = mini.get("ck1").getChecked();
+        $.ajax({
+            url : "/pvp_blacklist",
+            dataType: 'json',
+            cache: false,
+            type : "post",
+            data : {
+                type:"mm",
+                checked:checked
+            },
+            success : function(result) {
+                if(result){
+                    switch (result.code)
+                    {
+                        case 200:
+                            mini.get("textarea_list").setValue("");
+                            mini.get("textarea_list").setValue(result.string_black_list_show);
+                            mini.get("log").setValue("get ok");
                             break;
                     }
                 }else{

@@ -497,9 +497,9 @@ redis_rank_pvp_wrapper.get_block_list = function(cb){
                             if (err) {
                                 console.error(err);
                             }
-                            cheat_list[count].score_rank = result[0];
-                            cheat_list[count].score_rank_weekly = result[1];
-                            cheat_list[count].score_rank_activity = result[2];
+                            cheat_list[count].score_rank = result[0]?(result[0] + 1):999999;
+                            cheat_list[count].score_rank_weekly = result[1]?(result[1] + 1):999999;
+                            cheat_list[count].score_rank_activity = result[2]?(result[2] + 1):999999;
                             ++count;
                             callback(null);
                         });
