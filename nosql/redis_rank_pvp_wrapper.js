@@ -16,7 +16,7 @@ var z_rank_pvp_score = 'z_rank_pvp_score';
 var z_rank_pvp_strength = 'z_rank_pvp_strength';
 var h_award_pvp = 'h_award_pvp';
 var h_rank_pvp_cheat = 'h_rank_pvp_cheat';
-var h_rank_pvp_upload = 'h_rank_pvp_upload';
+var h_blacklist = 'h_blacklist';
 
 /**
  * add rank info at first enter pvp
@@ -575,6 +575,19 @@ redis_rank_pvp_wrapper.display_rank_pvp = function(device_guid){
                 rank_info.blocked = 0;
                 redis_rank_pvp_wrapper.set_rank_info(rank_info.channel,device_guid,rank_info,function(){});
             }
+            release();
+        });
+    });
+};
+
+redis_rank_pvp_wrapper.add_blacklist = function(black){
+    redis_pools.execute('pool_1',function(client, release) {
+        client.hset(h_blacklist,black.device_guid, JSON.stringify(black),function (err, reply) {
+            if (err) {
+                //  some thing log
+                rank_for_pvp_logger.error(err);
+            }
+            rank_for_pvp_logger.debug(black);
             release();
         });
     });
